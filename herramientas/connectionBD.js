@@ -31,6 +31,8 @@
           var db = mysql.createConnection(config.mysqlConfig);
 
           db.query(sqlQuery,function (err, rows){
+            db.end();
+            ssh.end();
             if(rows){
               resRows(rows);
             }
