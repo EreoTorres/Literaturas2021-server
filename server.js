@@ -22,9 +22,11 @@
 
   //APP
   app.use('/', indexRouter);
+  app.use('/login', loginRouter);
+
   app.use('/literaturas', literaturasRouter);
   app.use('/videos', videosRouter);
-  app.use('/login', loginRouter);
+  app.use('/programacion', programacionRouter);
 
   app.set('views', path.join(__dirname, 'views'));
   app.set('view engine', 'jade');

@@ -31,13 +31,15 @@
           var db = mysql.createConnection(config.mysqlConfig);
 
           db.query(sqlQuery,function (err, rows){
-            db.end();
-            ssh.end();
-            if(rows){
+            if(err){ 
+              console.log(err)
+              resRows(err) 
+            }else{
               resRows(rows);
             }
 
-            if(err){ resRows(err) }
+            db.end();
+            ssh.end();
           });
         }
       )
