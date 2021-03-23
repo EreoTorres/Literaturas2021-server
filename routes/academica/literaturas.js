@@ -1,5 +1,5 @@
 var express = require('express');
-var literaturasModel = require('../Models/literaturas-Model.js');
+var literaturasModel = require('../../Models/academica/literaturas-Model');
 var router = express.Router({ mergeParams: true });
 var storage = multer.diskStorage({
     destination: path.join(__dirname, "../public")
@@ -15,7 +15,7 @@ router.post("/setLiteraturas",async function (req, res){
     literaturasModel.setLiteraturas(registro).then(function (result){
         if(result){
             for(let datos of result){
-                if(datos.encontrado != 1){
+                if(datos.encontrado != 1 && datos.localPath){
                     fs.unlinkSync(datos.localPath);
                 }
             }
@@ -75,7 +75,7 @@ router.post('/getMaterias',async function(req, res, next) {
 
 router.get('/streamdoc/:id_plan/:id_materia/:nombre_archivo',async function(req, res) {
     literaturasModel.getDocLiteratura(req.params).then(function (result){
-        let localPath = path.join(__dirname, '../public/'+req.params.nombre_archivo);
+        let localPath = path.join(__dirname, '../../public/'+req.params.nombre_archivo);
 
         if(result){
             res.download(localPath, function(err) {

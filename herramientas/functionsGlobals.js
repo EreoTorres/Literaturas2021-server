@@ -6,6 +6,46 @@ module.exports = {
             return 'pruebas'
         }
     },
+    getFilesBase64(base,path){
+        return new Promise((resolve, reject) => {
+            var base64Data = base.split(',').pop();
+            binaryData = new Buffer(base64Data, 'base64').toString('binary'); 
+
+            require("fs").writeFile(path, binaryData, "binary", function(err) {
+                if (err) {
+                    console.error(err)
+                    return
+                }            
+
+                resolve(true)
+            });
+        })
+    },
+    deteleFiles(path){
+        require("fs").unlink(path, (err) => {
+            if (err) {
+              console.error(err)
+              return
+            }
+            //file removed
+        })
+    },
+    formatoFechaInsert(){
+        var pDate = '22/03/2021';
+        let dd = pDate.split("/")[0].padStart(2, "0");
+        let mm = pDate.split("/");
+
+        if(mm.length != 2){
+            mm = pDate.split("/")[1].padStart(2, "0");
+        }else{
+            mm = pDate.split("/")[1];
+        }
+        
+        let yyyy = pDate.split("/")[2].split(" ")[0];
+        mm = (parseInt(mm) - 1).toString();
+
+        return yyyy+'-'+mm+'-'+dd;
+    },
     eliminarDiacriticos: function (texto) {
         return texto.normalize('NFD').replace(/[\u0300-\u036f]/g,"");
     },

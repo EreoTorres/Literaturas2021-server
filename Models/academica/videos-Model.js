@@ -1,4 +1,4 @@
-var globalF = require('../herramientas/functionsGlobals');
+var globalF = require('../../herramientas/functionsGlobals');
 
 module.exports = {
     getVideos: function (req) {

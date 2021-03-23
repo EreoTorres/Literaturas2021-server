@@ -1,4 +1,4 @@
-const { eliminarDiacriticos,eliminarEspacios } = require('../herramientas/functionsGlobals');
+const { eliminarDiacriticos,eliminarEspacios } = require('../../herramientas/functionsGlobals');
 
 module.exports = {
     getLiteraturas: function (req) {
@@ -95,10 +95,14 @@ module.exports = {
     },
     getDocLiteratura: function (file) {
         return new Promise((resolve, reject) => {
-            let remotePath = '/var/www/html/literaturas/'+file.id_plan+'/'+file.id_materia+'/'+file.nombre_archivo;
-            let localPath = path.join(__dirname, '../public/'+file.nombre_archivo);
+            var rutas = {};
 
-            resolve(sftp.fastGet(remotePath, localPath));
+            rutas.remotePath = '/var/www/html/literaturas/'+file.id_plan+'/'+file.id_materia+'/'+file.nombre_archivo;
+            rutas.localPath = path.join(__dirname, '../../public/'+file.nombre_archivo);
+
+            connectionSFTP.fastGet(rutas, function (results){
+                resolve(results);
+            });
         });
     },
     setLiteraturas: function (registro) {
@@ -121,15 +125,12 @@ module.exports = {
 
                 if(res.length == 0){
                     fs.renameSync(file.path,file.localPath);
-    
-                    try {
-                        await sftp.mkdir(file.remotePath, true);
-                    }catch(e) {
-                        console.error(e.message);
-                    };
-                    
-                    res = await addLiteraturas(datos,file);
-                    res.localPath = file.localPath
+
+                    res = await verificaDir(file,datos);
+                    res.localPath = file.localPath                    
+
+                     console.log(res)
+                     console.log('res')
                 }else{
                     res = res[0];
                     fs.unlinkSync(file.path);
@@ -138,6 +139,7 @@ module.exports = {
                 resultados.push(res);
             }
 
+            console.log(resultados)
             resolve(resultados);
         });
     },
@@ -182,16 +184,24 @@ function addLiteraturas(datos,file){
     });
 }
 
+function verificaDir(file,datos){
+    return new Promise(async (resolve, reject) => {
+        connectionSFTP.mkdir(file.remotePath,async function (results){
+            var res = await addLiteraturas(datos,file)
+           resolve(res);
+        });
+    })
+}
+
 function uploadFile(registros,file) {
     return new Promise(async (resolve, reject) => {
-        
-        try {
-            await sftp.fastPut(file.localPath,file.remotePath+'/'+registros[1]);
-        }catch(e) {
-            console.error(e.message);
-        };
+        var rutas = {};
+        rutas.localPath = file.localPath;
+        rutas.remotePath = file.remotePath+'/'+registros[1];
 
-        resolve(true);
+        connectionSFTP.guardarDocumento(rutas, function (results){
+            resolve(true);
+        });
     });
 }
 
