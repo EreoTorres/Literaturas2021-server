@@ -74,9 +74,10 @@ router.post('/getMaterias',async function(req, res, next) {
 });
 
 router.get('/streamdoc/:id_plan/:id_materia/:nombre_archivo',async function(req, res) {
-    literaturasModel.getDocLiteratura(req.params).then(function (result){
-        let localPath = path.join(__dirname, '../../public/'+req.params.nombre_archivo);
 
+    literaturasModel.getDocLiteratura(req.params).then(function (result){
+        console.log(result)
+        let localPath = path.join(__dirname, '../../public/'+req.params.nombre_archivo);
         if(result){
             res.download(localPath, function(err) {
                 if (err) {

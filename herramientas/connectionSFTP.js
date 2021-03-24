@@ -41,7 +41,7 @@
 
         sftp.connect(credencialesSFTP_produccion)
         .then(() => {
-            return sftp.fastGet(rutas.localPath,rutas.remotePath);
+            return sftp.fastGet(rutas.remotePath,rutas.localPath);
         })
         .then(data => {
             sftp.end();
