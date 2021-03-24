@@ -2,7 +2,7 @@ var express = require('express');
 var literaturasModel = require('../../Models/academica/literaturas-Model');
 var router = express.Router({ mergeParams: true });
 var storage = multer.diskStorage({
-    destination: path.join(__dirname, "../public")
+    destination: path.join(__dirname, "../../public")
 });
 var upload = multer({ storage : storage}).any();
 
@@ -16,7 +16,13 @@ router.post("/setLiteraturas",async function (req, res){
         if(result){
             for(let datos of result){
                 if(datos.encontrado != 1 && datos.localPath){
-                    fs.unlinkSync(datos.localPath);
+                    console.log(datos.localPath)
+                    if(fs.existsSync(datos.localPath)){
+                        fs.unlinkSync(datos.localPath);
+                        console.log("El archivo EXISTE!");
+                    }else{
+                        console.log("El archivo NO EXISTE!");
+                    }
                 }
             }
 

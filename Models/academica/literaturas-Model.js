@@ -127,10 +127,7 @@ module.exports = {
                     fs.renameSync(file.path,file.localPath);
 
                     res = await verificaDir(file,datos);
-                    res.localPath = file.localPath                    
-
-                     console.log(res)
-                     console.log('res')
+                    res.localPath = path.join(__dirname, '../../public/'+file.namenew);                 
                 }else{
                     res = res[0];
                     fs.unlinkSync(file.path);
@@ -139,7 +136,6 @@ module.exports = {
                 resultados.push(res);
             }
 
-            console.log(resultados)
             resolve(resultados);
         });
     },
