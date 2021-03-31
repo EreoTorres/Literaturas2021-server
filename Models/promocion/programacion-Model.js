@@ -4,7 +4,8 @@ module.exports = {
             var query = 'SELECT ' +
                 'a.id as id_programacion,'+
                 'DATE_FORMAT(a.fecha_programada,"%d/%m/%Y") as fecha_programada,'+
-                'a.hora,'+
+                'DATE_FORMAT(a.fecha_caducidad_registro,"%d/%m/%Y %H:%m") as fecha_caducidad_registro,'+
+                'DATE_FORMAT(a.hora,"%H:%m") as hora,'+
                 'a.maximo_asistentes,'+
                 'IF(estatus = 1, "Activo", "Desactivado") as estatus,'+
                 'b.nombre_corto as nombre_plan_estudio '+
@@ -32,12 +33,14 @@ module.exports = {
                 req.id_plan_estudio +`,`+
                 `'','`+
                 req.fecha_programada_f+`','`+
+                req.fecha_caducidad_registro_f+`','`+
                 req.hora+`',`+
                 req.maximo_asistentes+`,`+
                 req.estatus+`,`+
                 req.id_usuario+
             `)`;
             
+            console.log(query)
             connection.invokeQuery(query, function (results){
                  resolve(results[0])
             });
