@@ -4,8 +4,8 @@ module.exports = {
             var query = 'SELECT ' +
                 'a.id as id_programacion,'+
                 'DATE_FORMAT(a.fecha_programada,"%d/%m/%Y") as fecha_programada,'+
-                'DATE_FORMAT(a.fecha_caducidad_registro,"%d/%m/%Y %H:%m") as fecha_caducidad_registro,'+
-                'DATE_FORMAT(a.hora,"%H:%m") as hora,'+
+                'DATE_FORMAT(a.fecha_caducidad_registro,"%d/%m/%Y %H:%i") as fecha_caducidad_registro,'+
+				'TIME_FORMAT(a.hora, "%H:%i") as hora,'+        
                 'a.maximo_asistentes,'+
                 'IF(estatus = 1, "Activo", "Desactivado") as estatus,'+
                 'b.nombre_corto as nombre_plan_estudio '+
