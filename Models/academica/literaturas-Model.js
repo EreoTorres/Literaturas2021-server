@@ -53,18 +53,41 @@ module.exports = {
         });
     },
     getProgramasAcademicos: function (registro) {
-        var query = 'SELECT '+
-            'DISTINCT c.id,'+
-            'c.nombre_corto '+
-        'FROM '+
-            'escolar.tb_corporaciones a '+
-            'INNER JOIN escolar.tb_escuelas b ON b.id_corporacion = a.id '+
-            'INNER JOIN escolar.tb_plan_estudio c ON c.id_escuela = b.id '+
-        'WHERE '+
-            'c.inscripcion = 1 '+
-            'AND c.activo = 1 '+
-        'ORDER BY '+
-            'a.id,c.nombre_corto ';
+        var query = `SELECT 
+                c.id,
+                c.nombre_corto,
+                a.id as id_corporacion,
+                a.nombre as corporacion
+            FROM 
+                escolar.tb_corporaciones a 
+                INNER JOIN escolar.tb_escuelas b ON b.id_corporacion = a.id 
+                INNER JOIN escolar.tb_plan_estudio c ON c.id_escuela = b.id 
+            WHERE 
+                c.inscripcion = 1 
+                AND c.activo = 1 
+            ORDER BY 
+                a.id,c.nombre_corto`;
+
+        return new Promise((resolve, reject) => {
+            connection.invokeQuery(query, function (results){
+                resolve(results);
+            })
+        });
+    },
+    getCorporaciones: function (registro) {
+        var query = `SELECT
+                a.id as id_plan_estudio,
+                b.id_corporacion AS 'id_corporacion',
+                c.nombre AS 'corporacion'
+            FROM 
+                tb_plan_estudio a 
+                INNER JOIN tb_escuelas b ON b.id = a.id_escuela 
+                INNER JOIN tb_escuelas_tipo b1 ON b1.id = b.id_tipo 
+                INNER JOIN tb_corporaciones c ON c.id = b.id_corporacion 
+            WHERE
+                a.activo = 1
+            GROUP BY
+                c.id`;
 
         return new Promise((resolve, reject) => {
             connection.invokeQuery(query, function (results){

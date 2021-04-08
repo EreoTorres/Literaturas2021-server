@@ -65,6 +65,21 @@ router.post('/getProgramasAcademicos',async function(req, res, next) {
     });
 });
 
+router.post('/getCorporaciones',async function(req, res, next) {
+    literaturasModel.getCorporaciones().then(function (result){
+        if(result){
+            res.setHeader("Content-Type", "application/json");
+            res.json({codigo: 200,resultado: result});
+            res.end(); 
+        }else{
+            res.setHeader("Content-Type", "application/json");
+            res.json({codigo: 0,mensaje: 'Programas no encontrados.'});
+            res.end(); 
+        }   
+    });
+});
+
+
 router.post('/getMaterias',async function(req, res, next) {
     literaturasModel.getMaterias(req.body).then(function (result){
         if(result){
