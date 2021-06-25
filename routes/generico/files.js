@@ -1,0 +1,64 @@
+var express = require('express');
+var literaturasModel = require('../../Models/academica/literaturas-Model');
+var router = express.Router({ mergeParams: true });
+var storage = multer.diskStorage({
+    destination: path.join(__dirname, "../../public")
+});
+var upload = multer({ storage: storage }).any();
+
+router.get('/', function(req, res, next) {
+    res.render('index', { title: 'Express' });
+});
+
+router.post("/setFiles", async function(req, res) {
+    res.setHeader("Content-Type", "application/json");
+    res.json(req.body);
+    res.end();
+});
+
+router.get('/streamdoc/:id_plan/:id_materia/:nombre_archivo', async function(req, res) {
+
+    literaturasModel.getDocLiteratura(req.params).then(function(result) {
+        console.log(result)
+        let localPath = path.join(__dirname, '../../public/' + req.params.nombre_archivo);
+        if (result) {
+            res.download(localPath, function(err) {
+                if (err) {
+                    console.log(err); // Check error if you want
+                }
+                fs.unlinkSync(localPath);
+            });
+        } else {
+            res.setHeader("Content-Type", "application/json");
+            res.json({ codigo: 0, mensaje: 'El documento no existe.' });
+            res.end();
+        }
+    });
+});
+
+function getFiles(req, res) {
+    return new Promise((resolve, reject) => {
+        upload(req, res, function(err) {
+            if (err) {
+                res.setHeader("Content-Type", "application/json");
+                res.json({ codigo: 0, mensaje: "Error uploading file." });
+                res.end();
+            } else {
+                var registro = { datos: null, files: [] };
+
+                req.files.forEach(async function(f) {
+                    if (f.fieldname == "data") {
+                        registro.datos = JSON.parse(fs.readFileSync(f.path, 'utf8'));
+                        fs.unlinkSync(f.path);
+                    } else {
+                        registro.files.push(f)
+                    }
+                });
+
+                resolve(registro)
+            }
+        });
+    });
+}
+
+module.exports = router;
