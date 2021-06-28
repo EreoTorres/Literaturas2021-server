@@ -11,7 +11,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post("/setFiles", async function(req, res) {
-    var registro = await getFiles(req, res);
+    // var registro = await getFiles(req, res);
     res.setHeader("Content-Type", "application/json");
     res.json({ codigo: 0, mensaje: 'No se encontraron literaturas.' });
     res.end();
