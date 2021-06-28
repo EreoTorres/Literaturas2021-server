@@ -11,35 +11,9 @@ router.get('/', function(req, res, next) {
 });
 
 router.post("/setFiles", async function(req, res) {
-    var registro = await getFiles(req, res);
-
     res.setHeader("Content-Type", "application/json");
-    res.json({ codigo: 200, resultado: registro });
+    res.json({ codigo: 200, resultado: req.body });
     res.end();
-
-    /*filesModel.setFiles(registro).then(function(result) {
-        if (result) {
-            for (let datos of result) {
-                if (datos.encontrado != 1 && datos.localPath) {
-                    console.log(datos.localPath)
-                    if (fs.existsSync(datos.localPath)) {
-                        fs.unlinkSync(datos.localPath);
-                        console.log("El archivo EXISTE!");
-                    } else {
-                        console.log("El archivo NO EXISTE!");
-                    }
-                }
-            }
-
-            res.setHeader("Content-Type", "application/json");
-            res.json({ codigo: 200, resultado: result });
-            res.end();
-        } else {
-            res.setHeader("Content-Type", "application/json");
-            res.json({ codigo: 0, mensaje: 'No se encontraron literaturas.' });
-            res.end();
-        }
-    });*/
 });
 
 router.get('/streamdoc/:id_plan/:id_materia/:nombre_archivo', async function(req, res) {
