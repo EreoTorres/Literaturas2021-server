@@ -1,1 +1,0 @@
-//aws.config.update(config_generico);
