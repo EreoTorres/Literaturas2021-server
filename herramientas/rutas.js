@@ -9,6 +9,3 @@ global.videosRouter = require('../routes/academica/videos');
 global.programacionRouter = require('../routes/promocion/programacion');
 global.publicidadRouter = require('../routes/promocion/publicidad');
 global.formularios_sesionesvirtualesRouter = require('../routes/promocion/formularios-sesionesvirtuales');
-
-//genericos
-global.genericoFilesRouter = require('../routes/generico/files');
