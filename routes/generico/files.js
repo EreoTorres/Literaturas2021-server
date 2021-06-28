@@ -10,31 +10,11 @@ router.get('/', function(req, res, next) {
     res.render('index', { title: 'Express' });
 });
 
-router.post("/setLiteraturas", async function(req, res) {
+router.post("/setFiles", async function(req, res) {
     var registro = await getFiles(req, res);
-    literaturasModel.setLiteraturas(registro).then(function(result) {
-        if (result) {
-            for (let datos of result) {
-                if (datos.encontrado != 1 && datos.localPath) {
-                    console.log(datos.localPath)
-                    if (fs.existsSync(datos.localPath)) {
-                        fs.unlinkSync(datos.localPath);
-                        console.log("El archivo EXISTE!");
-                    } else {
-                        console.log("El archivo NO EXISTE!");
-                    }
-                }
-            }
-
-            res.setHeader("Content-Type", "application/json");
-            res.json({ codigo: 200, resultado: result });
-            res.end();
-        } else {
-            res.setHeader("Content-Type", "application/json");
-            res.json({ codigo: 0, mensaje: 'No se encontraron literaturas.' });
-            res.end();
-        }
-    });
+    res.setHeader("Content-Type", "application/json");
+    res.json({ codigo: 0, mensaje: 'No se encontraron literaturas.' });
+    res.end();
 });
 
 router.post('/getLiteraturas', async function(req, res, next) {
