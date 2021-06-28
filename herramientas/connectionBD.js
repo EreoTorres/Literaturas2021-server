@@ -1,47 +1,47 @@
-  var config = require('./credencialesBD');
+  var config = require('./dbConfig');
 
-  global.connection = module.exports = function() {};
+  global.connection = module.exports = function(){};
 
-  createDBConnection = function() {
-      var mysqlConnection = mysql.createConnection({
-          host: config.mysqlConfig.host,
-          user: config.mysqlConfig.user,
-          password: config.mysqlConfig.password,
-          database: config.mysqlConfig.database,
-          connectTimeout: config.mysqlConfig.timeout
-      });
+  createDBConnection = function (){
+    var mysqlConnection = mysql.createConnection({
+      host: config.mysqlConfig.host,
+      user: config.mysqlConfig.user,
+      password: config.mysqlConfig.password,
+      database: config.mysqlConfig.database,
+      connectTimeout: config.mysqlConfig.timeout
+    });
 
-      return mysqlConnection;
+    return mysqlConnection;
   };
 
-  connection.invokeQuery = function(sqlQuery, resRows) {
-      var ssh = new SSH2client();
-      ssh.connect(config.sshTunnelConfig);
+  connection.invokeQuery = function (sqlQuery, resRows){
+    var ssh = new SSH2client();
+    ssh.connect(config.sshTunnelConfig);
 
-      ssh.on('ready', function() {
-          ssh.forwardOut(
-              config.localhost,
-              config.mysqlConfig.timeout,
-              config.localhost,
-              config.mysqlConfig.port,
-              function(err, stream) {
-                  if (err) { console.log(err) };
+    ssh.on('ready', function () {
+      ssh.forwardOut(
+        config.localhost,
+        config.mysqlConfig.timeout,
+        config.localhost,
+        config.mysqlConfig.port,
+        function (err, stream){
+          if(err) {console.log(err)};
 
-                  config.mysqlConfig.stream = stream;
-                  var db = mysql.createConnection(config.mysqlConfig);
+          config.mysqlConfig.stream = stream;
+          var db = mysql.createConnection(config.mysqlConfig);
 
-                  db.query(sqlQuery, function(err, rows) {
-                      if (err) {
-                          console.log(err)
-                          resRows(err)
-                      } else {
-                          resRows(rows);
-                      }
+          db.query(sqlQuery,function (err, rows){
+            if(err){ 
+              console.log(err)
+              resRows(err) 
+            }else{
+              resRows(rows);
+            }
 
-                      db.end();
-                      ssh.end();
-                  });
-              }
-          )
-      })
+            db.end();
+            ssh.end();
+          });
+        }
+      )
+    })
   };
