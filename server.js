@@ -31,6 +31,8 @@
   app.use('/promocion/publicidadbanner', publicidadRouter);
   app.use('/promocion/formulario_sesionesvirtuales', formularios_sesionesvirtualesRouter);
 
+  app.use('/generico/files', genericoFiles);
+
 
   app.set('views', path.join(__dirname, 'views'));
   app.set('view engine', 'jade');
