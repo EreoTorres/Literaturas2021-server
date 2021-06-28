@@ -12,6 +12,7 @@ router.get('/', function(req, res, next) {
 
 router.post("/setFiles", async function(req, res) {
     var registro = await getFiles(req, res);
+
     res.setHeader("Content-Type", "application/json");
     res.json({ codigo: 200, resultado: registro });
     res.end();
