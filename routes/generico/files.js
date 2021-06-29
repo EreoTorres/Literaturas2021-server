@@ -127,7 +127,7 @@ function getFiles(req, res) {
                     }
                 });
 
-                registro.datos = req.body;
+                registro.datos = JSON.parse(req.body.data);
 
                 resolve(registro)
             }
