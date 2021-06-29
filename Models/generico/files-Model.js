@@ -20,7 +20,7 @@ module.exports = {
 
 async function sendFile(file, res, index) {
     return new Promise(async(resolve, reject) => {
-        var fileStream = await convertFile(file, index);
+        //var fileStream = await convertFile(file, index);
 
         res.setHeader("Content-Type", "application/json");
         res.json({ codigo: 0, mensaje: "entro a sendFile" });
