@@ -15,6 +15,18 @@ router.post("/setFiles", async function(req, res) {
 
     filesModel.setFiles(registro, res).then(function(result) {
         if (result) {
+            for (let datos of result) {
+                if (datos.urlTemp) {
+                    console.log(datos.urlTemp)
+                    if (fs.existsSync(datos.urlTemp)) {
+                        fs.unlinkSync(datos.urlTemp);
+                        console.log("El archivo EXISTE!");
+                    } else {
+                        console.log("El archivo NO EXISTE!");
+                    }
+                }
+            }
+
             res.setHeader("Content-Type", "application/json");
             res.json({ codigo: 200, resultado: result });
             res.end();

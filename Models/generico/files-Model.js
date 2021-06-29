@@ -1,4 +1,4 @@
-const { eliminarDiacriticos, eliminarEspacios } = require('../../herramientas/functionsGlobals');
+const { getCredencialesAWSS3 } = require('../../herramientas/functionsGlobals');
 
 module.exports = {
     setFiles: function(registro, res) {
@@ -6,11 +6,11 @@ module.exports = {
             var file = [];
 
             registro.files.forEach(async function(f, index) {
-                file.push(await sendFile(f, res, index).then(url => {
+                file.push(await sendFile(f, registro.datos, res, index).then(url => {
                     return url
                 }));
 
-                if (index + 1 == files.length) {
+                if (index + 1 == registro.files.length) {
                     resolve(file)
                 }
             })
@@ -18,29 +18,36 @@ module.exports = {
     },
 };
 
-async function sendFile(file, res, index) {
+async function sendFile(file, datos, res, index) {
     return new Promise(async(resolve, reject) => {
         var fileStream = await convertFile(file, res, index);
+        var credenciales = getCredencialesAWSS3(datos.credencial_id);
 
-        /*const params = {
-            Bucket: bucket,
-            Key: fileStream.nombre,
-            Body: fileStream.stream
-        };
+        if (credenciales) {
+            const params = {
+                Bucket: credenciales.bucket,
+                Key: datos.ruta + "_" + fileStream.nombre,
+                Body: fileStream.stream
+            };
 
-        var s3 = new aws.S3();
-        s3.upload(params, function(err, data) {
-            if (err) {
-                res.setHeader("Content-Type", "application/json");
-                res.json({ codigo: 0, mensaje: 'Problemas al subir el archivo. Intentalo nuevamente.' });
-                res.end();
-            }
+            var s3 = new aws.S3();
+            s3.upload(params, function(err, data) {
+                if (err) {
+                    res.setHeader("Content-Type", "application/json");
+                    res.json({ codigo: 0, mensaje: 'Problemas al subir el archivo. Intentalo nuevamente.' });
+                    res.end();
+                }
 
-            fs.unlinkSync(fileStream.urlTemp)
-            fileStream.url = data.Location;
+                fs.unlinkSync(fileStream.urlTemp)
+                fileStream.url = data.Location;
 
-            resolve(fileStream)
-        });*/
+                resolve(fileStream)
+            });
+        } else {
+            res.setHeader("Content-Type", "application/json");
+            res.json({ codigo: 0, mensaje: 'Credenciales no definidas.' });
+            res.end();
+        }
     })
 }
 
@@ -48,9 +55,11 @@ function convertFile(file, res, index) {
     return new Promise((resolve, reject) => {
         var datetime = new Date().getTime();
         var formato = file.originalname.split(".")
-        var nombre = datetime + '-' + index + '-' + formato[0] + '.' + formato[1];
+        var nombre = datetime + '_' + index + '.' + formato[1];
 
-        fs.rename(file.path, path.join(__dirname, "../public/" + nombre), err => {
+        var targetPath = path.join(__dirname, "../../public/" + nombre);
+
+        fs.rename(file.path, targetPath, err => {
             if (err) {
                 res.setHeader("Content-Type", "application/json");
                 res.json({ codigo: 0, mensaje: err });
