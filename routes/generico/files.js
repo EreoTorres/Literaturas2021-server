@@ -127,8 +127,8 @@ function getFiles(req, res) {
                     }
                 });
 
-                if (req.datos && !registro.datos) {
-                    registro.datos = req.datos;
+                if (req.data && !registro.datos) {
+                    registro.datos = req.data;
                 }
 
                 resolve(registro)
