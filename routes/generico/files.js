@@ -1,5 +1,5 @@
 var express = require('express');
-var literaturasModel = require('../../Models/academica/literaturas-Model');
+var filesModel = require('../../Models/generico/files-Model');
 var router = express.Router({ mergeParams: true });
 var storage = multer.diskStorage({
     destination: path.join(__dirname, "../../public")
@@ -12,13 +12,8 @@ router.get('/', function(req, res, next) {
 
 router.post("/setFiles", async function(req, res) {
     var registro = await getFiles(req, res);
-    res.setHeader("Content-Type", "application/json");
-    res.json({ codigo: 0, mensaje: registro });
-    res.end();
-});
 
-router.post('/getLiteraturas', async function(req, res, next) {
-    literaturasModel.getLiteraturas(req.body).then(function(result) {
+    filesModel.setFiles(registro).then(function(result) {
         if (result) {
             res.setHeader("Content-Type", "application/json");
             res.json({ codigo: 200, resultado: result });
@@ -30,83 +25,6 @@ router.post('/getLiteraturas', async function(req, res, next) {
         }
     });
 });
-
-router.post('/getProgramasAcademicos', async function(req, res, next) {
-    literaturasModel.getProgramasAcademicos().then(function(result) {
-        if (result) {
-            res.setHeader("Content-Type", "application/json");
-            res.json({ codigo: 200, resultado: result });
-            res.end();
-        } else {
-            res.setHeader("Content-Type", "application/json");
-            res.json({ codigo: 0, mensaje: 'Programas no encontrados.' });
-            res.end();
-        }
-    });
-});
-
-router.post('/getCorporaciones', async function(req, res, next) {
-    literaturasModel.getCorporaciones().then(function(result) {
-        if (result) {
-            res.setHeader("Content-Type", "application/json");
-            res.json({ codigo: 200, resultado: result });
-            res.end();
-        } else {
-            res.setHeader("Content-Type", "application/json");
-            res.json({ codigo: 0, mensaje: 'Programas no encontrados.' });
-            res.end();
-        }
-    });
-});
-
-
-router.post('/getMaterias', async function(req, res, next) {
-    literaturasModel.getMaterias(req.body).then(function(result) {
-        if (result) {
-            res.setHeader("Content-Type", "application/json");
-            res.json({ codigo: 200, resultado: result });
-            res.end();
-        } else {
-            res.setHeader("Content-Type", "application/json");
-            res.json({ codigo: 0, mensaje: 'Materias no encontradas.' });
-            res.end();
-        }
-    });
-});
-
-router.get('/streamdoc/:id_plan/:id_materia/:nombre_archivo', async function(req, res) {
-
-    literaturasModel.getDocLiteratura(req.params).then(function(result) {
-        console.log(result)
-        let localPath = path.join(__dirname, '../../public/' + req.params.nombre_archivo);
-        if (result) {
-            res.download(localPath, function(err) {
-                if (err) {
-                    console.log(err); // Check error if you want
-                }
-                fs.unlinkSync(localPath);
-            });
-        } else {
-            res.setHeader("Content-Type", "application/json");
-            res.json({ codigo: 0, mensaje: 'El documento no existe.' });
-            res.end();
-        }
-    });
-});
-
-router.get('/uploadfile', async function(req, res) {
-    literaturasModel.uploadFile().then(function(result) {
-        if (result) {
-            res.setHeader("Content-Type", "application/json");
-            res.json({ codigo: 0, resultado: result });
-            res.end();
-        } else {
-            res.setHeader("Content-Type", "application/json");
-            res.json({ codigo: 0, mensaje: 'El documento no existe.' });
-            res.end();
-        }
-    });
-})
 
 function getFiles(req, res) {
     return new Promise((resolve, reject) => {
