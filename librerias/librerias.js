@@ -13,3 +13,4 @@
     global.multer = require('multer');
     global.filetype = require('file-type');
     global.crypto = require('crypto');
+    global.mime = require('mime-types');
