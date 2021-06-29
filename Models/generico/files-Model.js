@@ -20,11 +20,7 @@ module.exports = {
 
 async function sendFile(file, res, index) {
     return new Promise(async(resolve, reject) => {
-        //var fileStream = await convertFile(file, index);
-
-        res.setHeader("Content-Type", "application/json");
-        res.json({ codigo: 0, mensaje: "entro a sendFile" });
-        res.end();
+        var fileStream = await convertFile(file, index);
 
         /*const params = {
             Bucket: bucket,
@@ -50,6 +46,9 @@ async function sendFile(file, res, index) {
 
 function convertFile(file, index) {
     return new Promise((resolve, reject) => {
+        res.setHeader("Content-Type", "application/json");
+        res.json({ codigo: 0, mensaje: file });
+        res.end();
 
         var datetime = new Date().getTime();
         var formato = file.originalname.split(".")
