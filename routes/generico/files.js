@@ -127,6 +127,10 @@ function getFiles(req, res) {
                     }
                 });
 
+                if (req.datos && !registro.datos) {
+                    registro.datos = req.datos;
+                }
+
                 resolve(registro)
             }
         });
