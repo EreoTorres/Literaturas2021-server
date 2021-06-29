@@ -13,7 +13,7 @@ router.get('/', function(req, res, next) {
 router.post("/setFiles", async function(req, res) {
     var registro = await getFiles(req, res);
     res.setHeader("Content-Type", "application/json");
-    res.json({ codigo: 0, mensaje: req.body });
+    res.json({ codigo: 0, mensaje: registro });
     res.end();
 });
 
@@ -119,9 +119,15 @@ function getFiles(req, res) {
                 var registro = { datos: null, files: [] };
 
                 req.files.forEach(async function(f) {
-
-                    registro.files.push(f)
+                    if (f.fieldname == "data") {
+                        registro.datos = JSON.parse(fs.readFileSync(f.path, 'utf8'));
+                        fs.unlinkSync(f.path);
+                    } else {
+                        registro.files.push(f)
+                    }
                 });
+
+                registro.datos = req.body;
 
                 resolve(registro)
             }
