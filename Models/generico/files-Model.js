@@ -3,36 +3,20 @@ const { eliminarDiacriticos, eliminarEspacios } = require('../../herramientas/fu
 module.exports = {
     setFiles: function(registro) {
         return new Promise(async(resolve, reject) => {
-            if (error) {
-                res.setHeader("Content-Type", "application/json");
-                res.json({ codigo: 0, mensaje: 'Problemas al realizar el registro. Intentalo nuevamente.' });
-                res.end();
-            }
+            var file = [];
 
-            addRegistroDocs(registro, res).then(result => {
-                res.setHeader("Content-Type", "application/json");
-                res.json({ codigo: 200, resultado: result });
-                res.end();
-            });
+            registro.files.forEach(async function(f, index) {
+                file.push(await sendFile(f, res, index).then(url => {
+                    return url
+                }));
+
+                if (index + 1 == files.length) {
+                    resolve(file)
+                }
+            })
         });
     },
 };
-
-function addRegistroDocs(registro) {
-    return new Promise(async(resolve, reject) => {
-        var file = [];
-
-        registro.files.forEach(async function(f, index) {
-            file.push(await sendFile(f, res, index).then(url => {
-                return url
-            }));
-
-            if (index + 1 == files.length) {
-                resolve(file)
-            }
-        })
-    })
-}
 
 async function sendFile(file, res, index) {
     return new Promise(async(resolve, reject) => {
