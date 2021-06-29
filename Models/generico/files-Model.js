@@ -5,15 +5,21 @@ module.exports = {
         return new Promise(async(resolve, reject) => {
             var file = [];
 
-            registro.files.forEach(async function(f, index) {
-                file.push(await sendFile(f, res, index).then(url => {
-                    return url
-                }));
+            try {
+                registro.files.forEach(async function(f, index) {
+                    file.push(await sendFile(f, res, index).then(url => {
+                        return url
+                    }));
 
-                if (index + 1 == files.length) {
-                    resolve(file)
-                }
-            })
+                    if (index + 1 == files.length) {
+                        resolve(file)
+                    }
+                })
+            } catch (e) {
+                res.setHeader("Content-Type", "application/json");
+                res.json({ codigo: 0, mensaje: e });
+                res.end();
+            }
         });
     },
 };
