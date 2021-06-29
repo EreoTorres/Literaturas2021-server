@@ -46,17 +46,15 @@ async function sendFile(file, res, index) {
 
 function convertFile(file, res, index) {
     return new Promise((resolve, reject) => {
-        res.setHeader("Content-Type", "application/json");
-        res.json({ codigo: 0, mensaje: file });
-        res.end();
-
-        /*var datetime = new Date().getTime();
+        var datetime = new Date().getTime();
         var formato = file.originalname.split(".")
         var nombre = datetime + '-' + index + '-' + formato[0] + '.' + formato[1];
 
         fs.rename(file.path, path.join(__dirname, "../public/" + nombre), err => {
             if (err) {
-                console.log(err)
+                res.setHeader("Content-Type", "application/json");
+                res.json({ codigo: 0, mensaje: err });
+                res.end();
             } else {
                 resolve({
                     stream: fs.createReadStream(targetPath),
@@ -66,6 +64,6 @@ function convertFile(file, res, index) {
                     tipo: file.mimetype
                 });
             }
-        });*/
+        });
     })
 }
