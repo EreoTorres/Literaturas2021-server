@@ -127,8 +127,8 @@ function getFiles(req, res) {
                     }
                 });
 
-                if (req.data && !registro.datos) {
-                    registro.datos = req.data;
+                if (req.body && !registro.datos) {
+                    registro.datos = JSON.parse(req.body);
                 }
 
                 resolve(registro)
