@@ -41,7 +41,12 @@ async function sendFile(file, datos, res, index) {
                 fs.unlinkSync(fileStream.urlTemp)
                 fileStream.url = data.Location;
 
-                resolve(fileStream)
+                resolve({
+                    fromato: fileStream.formato,
+                    nombre: fileStream.nombre,
+                    url: fileStream.url,
+                    tipo: fileStream.tipo
+                })
             });
         } else {
             res.setHeader("Content-Type", "application/json");
