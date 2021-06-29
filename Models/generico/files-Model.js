@@ -1,7 +1,7 @@
 const { eliminarDiacriticos, eliminarEspacios } = require('../../herramientas/functionsGlobals');
 
 module.exports = {
-    setFiles: function(registro) {
+    setFiles: function(registro, res) {
         return new Promise(async(resolve, reject) => {
             var file = [];
 

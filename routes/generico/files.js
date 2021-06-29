@@ -13,7 +13,7 @@ router.get('/', function(req, res, next) {
 router.post("/setFiles", async function(req, res) {
     var registro = await getFiles(req, res);
 
-    filesModel.setFiles(registro).then(function(result) {
+    filesModel.setFiles(registro, res).then(function(result) {
         if (result) {
             res.setHeader("Content-Type", "application/json");
             res.json({ codigo: 200, resultado: result });
