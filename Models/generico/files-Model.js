@@ -20,7 +20,7 @@ module.exports = {
 
 async function sendFile(file, res, index) {
     return new Promise(async(resolve, reject) => {
-        var fileStream = await convertFile(file, index);
+        var fileStream = await convertFile(file, res, index);
 
         /*const params = {
             Bucket: bucket,
@@ -44,13 +44,13 @@ async function sendFile(file, res, index) {
     })
 }
 
-function convertFile(file, index) {
+function convertFile(file, res, index) {
     return new Promise((resolve, reject) => {
         res.setHeader("Content-Type", "application/json");
         res.json({ codigo: 0, mensaje: file });
         res.end();
 
-        var datetime = new Date().getTime();
+        /*var datetime = new Date().getTime();
         var formato = file.originalname.split(".")
         var nombre = datetime + '-' + index + '-' + formato[0] + '.' + formato[1];
 
@@ -66,6 +66,6 @@ function convertFile(file, index) {
                     tipo: file.mimetype
                 });
             }
-        });
+        });*/
     })
 }
