@@ -119,12 +119,8 @@ function getFiles(req, res) {
                 var registro = { datos: null, files: [] };
 
                 req.files.forEach(async function(f) {
-                    if (f.fieldname == "data") {
-                        registro.datos = JSON.parse(fs.readFileSync(f.path, 'utf8'));
-                        fs.unlinkSync(f.path);
-                    } else {
-                        registro.files.push(f)
-                    }
+
+                    registro.files.push(f)
                 });
 
                 resolve(registro)
