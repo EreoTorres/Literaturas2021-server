@@ -5,21 +5,15 @@ module.exports = {
         return new Promise(async(resolve, reject) => {
             var file = [];
 
-            try {
-                registro.files.forEach(async function(f, index) {
-                    file.push(await sendFile(f, res, index).then(url => {
-                        return url
-                    }));
+            registro.files.forEach(async function(f, index) {
+                file.push(await sendFile(f, res, index).then(url => {
+                    return url
+                }));
 
-                    if (index + 1 == files.length) {
-                        resolve(file)
-                    }
-                })
-            } catch (e) {
-                res.setHeader("Content-Type", "application/json");
-                res.json({ codigo: 0, mensaje: e });
-                res.end();
-            }
+                if (index + 1 == files.length) {
+                    resolve(file)
+                }
+            })
         });
     },
 };
@@ -28,7 +22,11 @@ async function sendFile(file, res, index) {
     return new Promise(async(resolve, reject) => {
         var fileStream = await convertFile(file, index);
 
-        const params = {
+        res.setHeader("Content-Type", "application/json");
+        res.json({ codigo: 0, mensaje: "entro a sendFile" });
+        res.end();
+
+        /*const params = {
             Bucket: bucket,
             Key: fileStream.nombre,
             Body: fileStream.stream
@@ -44,9 +42,9 @@ async function sendFile(file, res, index) {
 
             fs.unlinkSync(fileStream.urlTemp)
             fileStream.url = data.Location;
-            console.log(fileStream.url)
+
             resolve(fileStream)
-        });
+        });*/
     })
 }
 
