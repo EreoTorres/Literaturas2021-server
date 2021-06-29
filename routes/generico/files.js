@@ -11,9 +11,9 @@ router.get('/', function(req, res, next) {
 });
 
 router.post("/setFiles", async function(req, res) {
-    //var registro = await getFiles(req, res);
+    var registro = await getFiles(req, res);
     res.setHeader("Content-Type", "application/json");
-    res.json({ codigo: 0, mensaje: req.body });
+    res.json({ codigo: 0, mensaje: registro });
     res.end();
 });
 
@@ -126,10 +126,6 @@ function getFiles(req, res) {
                         registro.files.push(f)
                     }
                 });
-
-                if (req.body && !registro.datos) {
-                    registro.datos = JSON.parse(req.body);
-                }
 
                 resolve(registro)
             }
