@@ -40,13 +40,15 @@ router.post("/setFiles", async function(req, res) {
 });
 
 
-router.get('/getfile/:credencial_id/:nombre', async function(req, res) {
+router.get('/getfile/:credencial_id/:carpeta/:nombre', async function(req, res) {
     var credenciales = getCredencialesAWSS3(req.params.credencial_id);
 
     if (credenciales) {
+        var rutaS3 = req.params.carpeta + '/' + req.params.nombre;
+
         const params = {
             Bucket: credenciales.bucket,
-            Key: 'pagos/' + req.params.nombre
+            Key: rutaS3
         };
 
         new aws.S3().getObject(
@@ -56,7 +58,7 @@ router.get('/getfile/:credencial_id/:nombre', async function(req, res) {
                     fs.writeFile('public/' + req.params.nombre, data.Body, 'binary', function(err) {
                         if (err) {
                             res.setHeader("Content-Type", "application/json");
-                            res.json({ codigo: 0, mensaje: "No se encontro el documento" });
+                            res.json({ codigo: 0, mensaje: err });
                             res.end();
                         } else {
                             var stat = fs.statSync('public/' + req.params.nombre);
@@ -93,13 +95,15 @@ router.get('/getfile/:credencial_id/:nombre', async function(req, res) {
     }
 });
 
-router.get('/downloadfile/:credencial_id/:nombre', async function(req, res) {
+router.get('/downloadfile/:credencial_id/:carpeta/:nombre', async function(req, res) {
     var credenciales = getCredencialesAWSS3(req.params.credencial_id);
 
     if (credenciales) {
+        var rutaS3 = req.params.carpeta + '/' + req.params.nombre;
+
         const params = {
             Bucket: credenciales.bucket,
-            Key: 'pagos/' + req.params.nombre
+            Key: rutaS3
         };
 
         new aws.S3().getObject(

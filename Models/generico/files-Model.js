@@ -43,7 +43,7 @@ async function sendFile(file, datos, res, index) {
 
                 resolve({
                     fromato: fileStream.formato,
-                    nombre: fileStream.nombre,
+                    nombre: datos.ruta + "_" + fileStream.nombre,
                     url: fileStream.url,
                     tipo: fileStream.tipo
                 })
